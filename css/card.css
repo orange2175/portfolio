@@ -39,11 +39,45 @@
 }
 
 
-.skill{
-    display: flex;
-    justify-content: space-between; 
-    padding:20px;
+/*  */
+
+
+
+.skill_top_container{
+    text-align: center;
+    background-color: brown;
+    color:white;
+    margin:20px auto;
+    width:80%;
+
+    margin-bottom:30px;
+   
+    position:  relative;        
+    z-index: 10;        
+    
+    
 }
+
+
+
+.skill_top{
+    padding:50px;
+    width:100%;
+    margin:0 auto;
+    display: flex; 
+    justify-content: space-between; 
+    flex-wrap:wrap;
+
+    background-color: aliceblue;
+}
+
+.skill{
+   display: flex; 
+    padding:20px;
+
+
+}
+
 
 .skill img{
         border-radius: 50%; 
