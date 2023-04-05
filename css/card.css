@@ -1,0 +1,48 @@
+.card_top{
+    display: flex;
+
+    
+   
+     justify-content: space-around; 
+    width:100%;
+    padding:50px;
+    margin:0 auto;
+    flex-wrap:wrap;
+}
+
+.card_top_container{
+    text-align: center;
+    background-color: brown;
+    color:white;
+    margin:20px auto;
+    width:80%;
+    
+    margin-top:200px;
+    margin-bottom:-30px;
+}
+
+.card{
+     position: relative;
+     padding:10px;
+     margin-bottom:30px;
+    
+}
+.card img{
+    width:400px;
+    height:200px;
+}
+
+.card_text{
+    position: absolute;
+
+   
+}
+
+
+.skill img{
+        border-radius: 50%; 
+        width:  180px;
+        height: 180px; 
+        }
+}
+
