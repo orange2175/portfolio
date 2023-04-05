@@ -1,8 +1,5 @@
 .card_top{
     display: flex;
-
-    
-   
      justify-content: space-around; 
     width:100%;
     padding:50px;
@@ -19,12 +16,15 @@
     
     margin-top:250px;
     margin-bottom:-30px;
+    
+    position:  relative;        
+    z-index: 10;          
 }
 
 .card{
      position: relative;
-     padding:10px;
-     margin-bottom:30px;
+     padding:10px;      
+     z-index: 10;   
     
 }
 .card img{
@@ -35,14 +35,24 @@
 .card_text{
     position: absolute;
 
-   
+    z-index: 10;   
 }
 
+
+.skill{
+    display: flex;
+    justify-content: space-between; 
+    padding:20px;
+}
 
 .skill img{
         border-radius: 50%; 
-        width:  180px;
-        height: 180px; 
-        }
+        width: 80px;
+        height: 80px; 
 }
+
+h1{
+    padding-left:20px;
+}
+
 
