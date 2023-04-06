@@ -4,7 +4,7 @@
   position: fixed;
   background-color: #a38888;
   width: 100%;
- z-index : 300;
+ z-index : 350;
 }
 
 .header_top{
@@ -14,12 +14,55 @@
   /* color: #fff; */
 }
 
+
+/*  */
+
+.top{
+  
+}
+
+.top_container{
+  
+  
+}
+
 .top img{
+  position: relative;
   margin-top:75px;
   width:100%;
   height:300px;
+  z-index : 30;
 }
 
+.top_text{
+  z-index : 300;
+  position: absolute;
+  top:150px;
+  left:50px;
+  font-size: 40px;
+  color:rgb(34, 168, 168);
+}
+
+.top_text2{
+
+  z-index : 300;
+  position: absolute;
+  top:200px;
+  left:50px;
+  font-size: 27px;
+  color:rgb(34, 168, 168);
+}
+
+span{
+ font-size: 6px;
+ color:rgb(34, 168, 168);
+}
+
+
+
+
+
+/*  */
 
 .content{
   
@@ -48,10 +91,17 @@ li{
 }
 
 
+.bottom{
+  background-color: black;
+  color:white;
+ }
+
+
+
+/*アコーディオン用css */
 
 ol, ul { list-style: none;}
 
-/* 以下、アコーディオンの設定 */
 .list {
   margin: 0 auto;
   max-width: 700px;
@@ -92,17 +142,12 @@ ol, ul { list-style: none;}
 
 
  
- .bottom{
-  background-color: black;
-  color:white;
- }
 
  
 
- 
+ /* ハンバーガーメニュー用css */
 
 
-/*　ハンバーガーボタン　*/
 .hamburger {
   display : block;
   position: fixed;
@@ -206,7 +251,7 @@ nav.globalMenuSp ul li a {
  z-index: 1;
 }
 
-/* このクラスを、jQueryで付与・削除する */
+
 nav.globalMenuSp.active {
   transform: translateX(0%);
 }
