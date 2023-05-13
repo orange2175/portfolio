@@ -1,0 +1,258 @@
+@media screen and (min-width: 680px) {
+	/* 959px以下に適用されるCSS（タブレット用） */
+
+.top{
+    position: relative;
+
+    background-color: rgba(0, 255, 255, 0.616);
+    height:500px;
+    /* padding:50px; */
+   
+    
+    
+}
+
+ul{
+    background-color: aliceblue;
+    border: 1px solid black;
+     text-align: center;
+}
+
+li{
+    list-style: none;
+    background-color: aliceblue;
+    border: 1px solid black;
+   padding-left:100px;
+   padding-right:100px;
+}
+
+
+.top_container{
+    font-size:35px;
+   color: bisque;
+   
+   -webkit-text-stroke: 1px black;
+   text-stroke: 1px bisque;
+
+   text-shadow: 10px 10px 3px #808080;
+}
+
+
+.top_container2{
+    padding-top:10px;
+    border-bottom: 3px solid beige;
+    width:270px;
+    padding: 20px;
+    
+}
+.top_container3{
+    position: relative;
+    padding-top:10px;
+    border-bottom: 3px solid beige;
+   
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    color: blueviolet;
+    line-height: 40px;
+    
+    z-index:1000;
+   
+}
+
+
+
+
+
+
+.ball_box{
+    
+}
+
+.ball{
+   position: absolute;
+  top:60px;
+  left:300px;
+    background-color: rgba(248, 122, 122, 0.998);
+    width:350px;
+    height:350px;
+    border-radius:50%  ;
+   
+    mix-blend-mode: screen; 
+    z-index:100;
+}
+.ball2{
+    position: absolute;
+    top:180px;
+    left: 460px;
+
+    background-color:yellow;
+    width:300px;
+    height:300px;
+    border-radius:50%  ;
+    mix-blend-mode: screen;
+}
+
+.ball3{
+    position: absolute;
+    top:80px;
+    left: 660px;
+
+    background-color:rgb(127, 127, 251);
+    width:200px;
+    height:200px;
+    border-radius:50%  ;
+    mix-blend-mode: screen;
+}
+
+.image img{
+    padding:20px;
+    width: 300px;
+    height: 180px;
+    position: relative;
+    z-index: 1000;
+   
+}
+
+.image2{
+    position:relative;
+}
+
+.image2 img{
+    padding:20px;
+    width: 300px;
+    height: 180px;
+    position: relative;
+    z-index: 1000;
+   
+}
+.text2{
+    position: absolute;
+}
+
+.contant{
+
+    text-align: center;
+    position: relative;
+    z-index: 1000;
+    margin-top:30px;
+    font-size: 20px;
+
+    line-height: 30px;
+}
+
+
+.imgcon{
+    display: flex;
+    }
+
+    .black{
+        background-color: white;
+       border:2px solid black;
+        width: 100%;
+        height: 40px;
+        text-align: center;
+        /* margin-top: 280px; */
+        padding-top:30px;
+      }}
+
+
+/*  */
+
+
+@media screen and (max-width: 680px) {
+    body{
+        background-color: rgba(0, 255, 255, 0.616);
+    }
+ 
+.top{
+    position: relative;
+    height:400px;
+    padding:50px;
+   
+    
+    
+}
+
+.top_container{
+    font-size:35px;
+   color: bisque;
+   
+   -webkit-text-stroke: 1px black;
+   text-stroke: 1px bisque;
+
+   text-shadow: 10px 10px 3px #808080;
+}
+
+
+.top_container2{
+    padding-top:10px;
+    border-bottom: 3px solid beige;
+    width:270px;
+    padding: 20px;
+    
+}
+.top_container3{
+    position: relative;
+    padding-top:10px;
+    border-bottom: 3px solid beige;
+   
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    color: blueviolet;
+    line-height: 40px;
+    
+    z-index:1000;
+   
+}
+
+
+
+
+
+
+.image img{
+    padding-top: 10px;
+  
+    width: 100%;
+    margin:0 auto;
+    height: 180px;
+    position: relative;
+    z-index: 1000;
+   
+}
+
+.contant{
+
+    text-align: center;
+    position: relative;
+    z-index: 1000;
+  
+    font-size: 20px;
+
+    line-height: 30px;
+}
+
+ul{
+    background-color: aliceblue;
+    border: 1px solid black;
+}
+
+li{
+    list-style: none;
+    background-color: aliceblue;
+    border: 1px solid black;
+}
+
+
+  
+.black{
+    background-color:black;
+    color:white;
+   border:2px solid black;
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    margin-top: 280px; 
+    padding-top:30px;
+    border:1px solid white ;
+  }}
