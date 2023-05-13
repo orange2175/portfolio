@@ -1,1 +1,195 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="css/reset.css"/>
+    <link rel="stylesheet" href="portfolio.css"/>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js" type="text/javascript"></script>  
+    <title>Document</title>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">LOGO</div>
+        <button class="hamburger-menu" id="js-hamburger-menu">
+          <span class="hamburger-menu__bar"></span>
+          <span class="hamburger-menu__bar"></span>
+          <span class="hamburger-menu__bar"></span>
+        </button>
+        <nav class="navigation">
+          <ul class="navigation__list">
+            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ１</a></li>
+            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ２</a></li>
+            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ３</a></li>
+            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ４</a></li>
+            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ５</a></li>
+            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ６</a></li>
+          </ul>
+        </nav>
+      </header>
+
+
+
+      <div class="table_contant">
+        
+      </div>
+
+    <div class="top">
+        <h1 class="top_container">PORT FOLIO</h1>
+        <h4 class="top_container2">ここはポートフォリオ用サイトです</h4>
+        <h1 class="top_container3">　30代手前から始めたプログラミング。<br>　プログラミングのなんたるかもわからない状態から情報収集と自分が作りたいものを模索し続け多くの人が使いやすく魅力的なサイト作りを目指し精進しております</h1>
+        
+   
+
+        <div class="ball_box">
+        <p class="ball"></p>
+        <p class="ball2"></p>
+        <p class="ball3"></p>
+      </div>
+
+      <div class="imgcon">
+
+      <div class="image">
+     <img src="img/sakura.jpg"> 
+     </div>
+
+   <div class="contant">
+  <ul>
+    <li>コンテンツ1</li>
+    <li>コンテンツ2</li>
+    <li>コンテンツ3</li>
+    <li>コンテンツ4</li>
+    <li>お問い合わせ</li>
+  </ul>
+</div> 
+
+     </div>
+
+
+
+      
+</div>
+
+
+
+</div>
+    
+
+  <p class="black">2023</p>  
+
+
+
+</body>
+
+<style>
+
+ 
+
+
+.header {
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  background-color: #45f0f0;
+}
+.logo {
+  font-weight: 700;
+  padding-left: 14px;
+}
+.hamburger-menu {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  border: none;
+  background: transparent;
+  appearance: none;
+  padding: 0;
+  cursor: pointer;
+}
+.hamburger-menu__bar {
+  display: inline-block;
+  width: 60%;
+  height: 2px;
+  background: #242424;
+  position: absolute;
+  /* left: 50%; */
+  transform: translateX(-50%);
+  transition: .5s;
+}
+.hamburger-menu__bar:first-child {
+  top: 16px;
+}
+.hamburger-menu__bar:nth-child(2) {
+  top: 24px;
+}
+.hamburger-menu__bar:last-child {
+  top: 32px;
+}
+.hamburger-menu--open .hamburger-menu__bar {
+  top: 50%;
+}
+.hamburger-menu--open .hamburger-menu__bar:first-child {
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
+}
+.hamburger-menu--open .hamburger-menu__bar:last-child {
+  transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+}
+.hamburger-menu--open .hamburger-menu__bar:nth-child(2) {
+  display: none;
+}
+.navigation {
+  display: none;
+  background: #242424;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  z-index: 9999;
+}
+.navigation__list {
+  text-align: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.navigation__list-item {
+  border-bottom: solid 1px #474747;
+}
+.navigation__list-item:first-child {
+  border-top: solid 1px #474747;
+}
+.navigation__link {
+ 
+  font-weight: 700;
+  text-decoration: none;
+  display: block;
+  padding: 24px 0;
+  transition: .5s;
+}
+@media (hover: hover) and (pointer: fine) {
+  .navigation__link:hover {
+    background: #333;
+  }
+}
+
+</style>
+
+<script>
+    $(function () {
+  $('#js-hamburger-menu, .navigation__link').on('click', function () {
+    $('.navigation').slideToggle(500)
+    $('.hamburger-menu').toggleClass('hamburger-menu--open')
+  });
+});
+</script>
+
+
+
+</html>
