@@ -1,195 +1,271 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="css/reset.css"/>
-    <link rel="stylesheet" href="portfolio.css"/>
-
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>  
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.7.1/js/lightbox.min.js" type="text/javascript"></script>  
-    <title>Document</title>
+    <title>ボタン低め＋敵出現＋アイテム遅延</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #gameContainer {
+            flex: 5;
+            background: lightblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            background: lightblue;
+        }
+        #controls {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f0f0;
+            gap: 20px;
+        }
+        .button {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+    </style>
 </head>
 <body>
-
-    <header class="header">
-        <div class="logo">LOGO</div>
-        <button class="hamburger-menu" id="js-hamburger-menu">
-          <span class="hamburger-menu__bar"></span>
-          <span class="hamburger-menu__bar"></span>
-          <span class="hamburger-menu__bar"></span>
-        </button>
-        <nav class="navigation">
-          <ul class="navigation__list">
-            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ１</a></li>
-            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ２</a></li>
-            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ３</a></li>
-            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ４</a></li>
-            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ５</a></li>
-            <li class="navigation__list-item"><a href="#" class="navigation__link">コンテンツ６</a></li>
-          </ul>
-        </nav>
-      </header>
-
-
-
-      <div class="table_contant">
-        
-      </div>
-
-    <div class="top">
-        <h1 class="top_container">PORT FOLIO</h1>
-        <h4 class="top_container2">ここはポートフォリオ用サイトです</h4>
-        <h1 class="top_container3">　30代手前から始めたプログラミング。<br>　プログラミングのなんたるかもわからない状態から情報収集と自分が作りたいものを模索し続け多くの人が使いやすく魅力的なサイト作りを目指し精進しております</h1>
-        
-   
-
-        <div class="ball_box">
-        <p class="ball"></p>
-        <p class="ball2"></p>
-        <p class="ball3"></p>
-      </div>
-
-      <div class="imgcon">
-
-      <div class="image">
-     <img src="img/sakura.jpg"> 
-     </div>
-
-   <div class="contant">
-  <ul>
-    <li>コンテンツ1</li>
-    <li>コンテンツ2</li>
-    <li>コンテンツ3</li>
-    <li>コンテンツ4</li>
-    <li>お問い合わせ</li>
-  </ul>
-</div> 
-
-     </div>
-
-
-
-      
+<div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
 </div>
-
-
-
+<div id="controls">
+    <div id="left" class="button">←</div>
+    <div id="jump" class="button">⤴</div>
+    <div id="right" class="button">→</div>
 </div>
-    
-
-  <p class="black">2023</p>  
-
-
-
-</body>
-
-<style>
-
- 
-
-
-.header {
-  height: 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  background-color: #45f0f0;
-}
-.logo {
-  font-weight: 700;
-  padding-left: 14px;
-}
-.hamburger-menu {
-  width: 50px;
-  height: 50px;
-  position: relative;
-  border: none;
-  background: transparent;
-  appearance: none;
-  padding: 0;
-  cursor: pointer;
-}
-.hamburger-menu__bar {
-  display: inline-block;
-  width: 60%;
-  height: 2px;
-  background: #242424;
-  position: absolute;
-  /* left: 50%; */
-  transform: translateX(-50%);
-  transition: .5s;
-}
-.hamburger-menu__bar:first-child {
-  top: 16px;
-}
-.hamburger-menu__bar:nth-child(2) {
-  top: 24px;
-}
-.hamburger-menu__bar:last-child {
-  top: 32px;
-}
-.hamburger-menu--open .hamburger-menu__bar {
-  top: 50%;
-}
-.hamburger-menu--open .hamburger-menu__bar:first-child {
-  transform: translateX(-50%) translateY(-50%) rotate(45deg);
-}
-.hamburger-menu--open .hamburger-menu__bar:last-child {
-  transform: translateX(-50%) translateY(-50%) rotate(-45deg);
-}
-.hamburger-menu--open .hamburger-menu__bar:nth-child(2) {
-  display: none;
-}
-.navigation {
-  display: none;
-  background: #242424;
-  position: absolute;
-  top: 50px;
-  width: 100%;
-  z-index: 9999;
-}
-.navigation__list {
-  text-align: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.navigation__list-item {
-  border-bottom: solid 1px #474747;
-}
-.navigation__list-item:first-child {
-  border-top: solid 1px #474747;
-}
-.navigation__link {
- 
-  font-weight: 700;
-  text-decoration: none;
-  display: block;
-  padding: 24px 0;
-  transition: .5s;
-}
-@media (hover: hover) and (pointer: fine) {
-  .navigation__link:hover {
-    background: #333;
-  }
-}
-
-</style>
-
 <script>
-    $(function () {
-  $('#js-hamburger-menu, .navigation__link').on('click', function () {
-    $('.navigation').slideToggle(500)
-    $('.hamburger-menu').toggleClass('hamburger-menu--open')
-  });
-});
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Canvasサイズ設定
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight * 0.8; // プレイ画面は80%使用
+
+    // キャラクター情報
+    const chara1 = {
+        x: canvas.width / 2 - 25,
+        y: canvas.height - 75,
+        width: 50,
+        height: 50,
+        speed: 5,
+        jumpPower: 15,
+        velocityY: 0,
+        isJumping: false,
+        gravity: 0.5
+    };
+
+    // 地面情報
+    const groundHeight = 20;
+
+    // ゲーム情報
+    let lives = 3;
+    let score = 0;
+    const maxScore = 30;
+
+    // 敵キャラクターとアイテム
+    const enemies = [];
+    const items = [];
+    let itemStartDelay = 20000; // 20秒後にアイテム生成を開始
+    let lastItemSpawn = Date.now();
+
+    // ボタン操作管理
+    const keys = {
+        left: false,
+        right: false,
+        space: false
+    };
+
+    // イベントリスナー
+    document.getElementById('left').addEventListener('touchstart', () => keys.left = true);
+    document.getElementById('left').addEventListener('touchend', () => keys.left = false);
+    document.getElementById('right').addEventListener('touchstart', () => keys.right = true);
+    document.getElementById('right').addEventListener('touchend', () => keys.right = false);
+    document.getElementById('jump').addEventListener('touchstart', () => {
+        if (!chara1.isJumping) {
+            chara1.velocityY = -chara1.jumpPower;
+            chara1.isJumping = true;
+        }
+    });
+
+    // 敵生成関数
+    function createEnemy(type) {
+        return {
+            type: type,
+            x: canvas.width + Math.random() * 300,
+            y: canvas.height - groundHeight - 40,
+            width: 30,
+            height: 30,
+            speed: 2 + Math.random() * 2
+        };
+    }
+
+    // アイテム生成関数
+    function createItem(type) {
+        return {
+            type: type,
+            x: canvas.width + Math.random() * 300,
+            y: canvas.height - groundHeight - 80,
+            width: 20,
+            height: 20,
+            speed: 2
+        };
+    }
+
+    // 敵生成タイマー
+    setInterval(() => {
+        const enemyTypes = ['goomba', 'paratroopa', 'spiny'];
+        enemies.push(createEnemy(enemyTypes[Math.floor(Math.random() * enemyTypes.length)]));
+    }, 1500); // 敵の出現間隔を1.5秒
+
+    // アイテム生成タイマー（20秒後に開始）
+    function spawnItemIfReady() {
+        if (Date.now() - lastItemSpawn >= itemStartDelay) {
+            if (Math.random() < 0.5) {
+                items.push(createItem('heart'));
+            } else {
+                items.push(createItem('star'));
+            }
+            lastItemSpawn = Date.now();
+        }
+    }
+
+    // 当たり判定
+    function checkCollision(a, b) {
+        return (
+            a.x < b.x + b.width &&
+            a.x + a.width > b.x &&
+            a.y < b.y + b.height &&
+            a.y + a.height > b.y
+        );
+    }
+
+    // ゲームループ
+    function update() {
+        // キャラクター移動
+        if (keys.left) chara1.x -= chara1.speed;
+        if (keys.right) chara1.x += chara1.speed;
+
+        // ジャンプと重力
+        chara1.velocityY += chara1.gravity;
+        chara1.y += chara1.velocityY;
+
+        // 地面判定
+        if (chara1.y + chara1.height > canvas.height - groundHeight) {
+            chara1.y = canvas.height - groundHeight - chara1.height;
+            chara1.isJumping = false;
+            chara1.velocityY = 0;
+        }
+
+        // 画面外に出ないよう制限
+        if (chara1.x < 0) chara1.x = 0;
+        if (chara1.x + chara1.width > canvas.width) chara1.x = canvas.width - chara1.width;
+
+        // 敵の更新
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            const enemy = enemies[i];
+            enemy.x -= enemy.speed;
+
+            if (enemy.x + enemy.width < 0) {
+                enemies.splice(i, 1);
+                score++;
+                if (score >= maxScore) {
+                    alert('クリア！');
+                    return;
+                }
+                continue;
+            }
+
+            if (checkCollision(chara1, enemy)) {
+                lives--;
+                enemies.splice(i, 1);
+                if (lives <= 0) {
+                    alert('ゲームオーバー！');
+                    return;
+                }
+            }
+        }
+
+        // アイテム生成
+        spawnItemIfReady();
+
+        // アイテムの更新
+        for (let i = items.length - 1; i >= 0; i--) {
+            const item = items[i];
+            item.x -= item.speed;
+
+            if (item.x + item.width < 0) {
+                items.splice(i, 1);
+                continue;
+            }
+
+            if (checkCollision(chara1, item)) {
+                if (item.type === 'heart' && lives < 5) {
+                    lives++;
+                }
+                items.splice(i, 1);
+            }
+        }
+
+        draw();
+        requestAnimationFrame(update);
+    }
+
+    // 描画
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 地面
+        ctx.fillStyle = 'green';
+        ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
+
+        // キャラクター
+        ctx.fillStyle = 'red';
+        ctx.fillRect(chara1.x, chara1.y, chara1.width, chara1.height);
+
+        // 敵
+        for (const enemy of enemies) {
+            ctx.fillStyle = enemy.type === 'goomba' ? 'brown' : enemy.type === 'paratroopa' ? 'blue' : 'purple';
+            ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        }
+
+        // アイテム
+        for (const item of items) {
+            ctx.fillStyle = item.type === 'heart' ? 'pink' : 'gold';
+            ctx.fillRect(item.x, item.y, item.width, item.height);
+        }
+
+        // スコアと残機
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+        ctx.fillText(`スコア: ${score}`, 10, 30);
+        ctx.fillText(`残機: ${lives}`, 10, 60);
+    }
+
+    update();
 </script>
-
-
-
+</body>
 </html>
+
