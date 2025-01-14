@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ボタン低め＋敵出現＋アイテム遅延</title>
+    <title>全体を上に調整</title>
     <style>
         body {
             margin: 0;
@@ -14,7 +13,7 @@
             height: 100vh;
         }
         #gameContainer {
-            flex: 5;
+            flex: 6; /* ゲームエリアを少し広く */
             background: lightblue;
             display: flex;
             justify-content: center;
@@ -24,7 +23,7 @@
             background: lightblue;
         }
         #controls {
-            flex: 1;
+            flex: 2; /* 操作エリアを少し広く */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -45,6 +44,22 @@
             cursor: pointer;
             user-select: none;
         }
+        #specialButton {
+            position: fixed;
+            bottom: 150px; /* ボタンの位置を少し上へ調整 */
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: gold;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 80px;
+            cursor: pointer;
+            display: none; /* デフォルトで非表示 */
+        }
     </style>
 </head>
 <body>
@@ -56,13 +71,14 @@
     <div id="jump" class="button">⤴</div>
     <div id="right" class="button">→</div>
 </div>
+<div id="specialButton">攻撃</div>
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
     // Canvasサイズ設定
     canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight * 0.8; // プレイ画面は80%使用
+    canvas.height = window.innerHeight * 0.75; // プレイ画面は75%使用
 
     // キャラクター情報
     const chara1 = {
@@ -91,6 +107,10 @@
     let itemStartDelay = 20000; // 20秒後にアイテム生成を開始
     let lastItemSpawn = Date.now();
 
+    // 特殊攻撃ボタン
+    const specialButton = document.getElementById('specialButton');
+    let specialReady = false;
+
     // ボタン操作管理
     const keys = {
         left: false,
@@ -108,6 +128,12 @@
             chara1.velocityY = -chara1.jumpPower;
             chara1.isJumping = true;
         }
+    });
+
+    specialButton.addEventListener('click', () => {
+        enemies.length = 0; // 全ての敵を消滅
+        specialReady = false;
+        specialButton.style.display = 'none';
     });
 
     // 敵生成関数
@@ -225,6 +251,10 @@
                 if (item.type === 'heart' && lives < 5) {
                     lives++;
                 }
+                if (item.type === 'star') {
+                    specialReady = true;
+                    specialButton.style.display = 'block';
+                }
                 items.splice(i, 1);
             }
         }
@@ -268,4 +298,3 @@
 </script>
 </body>
 </html>
-
