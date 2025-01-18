@@ -83,7 +83,7 @@
 
     // プレイヤー画像の読み込み
     const playerImage = new Image();
-    playerImage.src = "./your-image-path.jpg"; // 画像ファイルのパスを指定してください
+    playerImage.src = "./your-image-path.png"; // 画像ファイルのパスを指定してください
 
     // キャラクター情報
     const chara1 = {
