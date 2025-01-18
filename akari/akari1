@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>波打つ敵の追加</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #gameContainer {
+            flex: 6;
+            background: lightblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            background: lightblue;
+        }
+        #controls {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f0f0f0;
+            gap: 20px;
+            position: relative;
+            top: -50px;
+        }
+        .button {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+        }
+        #attackButton {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: gold;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 80px;
+            cursor: pointer;
+            display: none; /* 初期は非表示 */
+        }
+    </style>
+</head>
+<body>
+<div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+</div>
+<div id="controls">
+    <div id="left" class="button">←</div>
+    <div id="right" class="button">→</div>
+</div>
+<div id="attackButton">攻撃</div>
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Canvasサイズ設定
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight * 0.8;
+
+    // プレイヤー画像の読み込み
+    const playerImage = new Image();
+    playerImage.src = "./your-image-path.jpg"; // 画像ファイルのパスを指定してください
+
+    // キャラクター情報
+    const chara1 = {
+        x: canvas.width / 2 - 50,
+        y: canvas.height - 150,
+        width: 100,
+        height: 120,
+        speed: 7,
+        hitbox: {
+            xOffset: 30,
+            yOffset: 40,
+            width: 40,
+            height: 40
+        }
+    };
+
+    // 敵情報
+    const enemies = [];
+    const enemySpawnInterval = 1000;
+
+    // アイテム情報
+    const items = [];
+    const itemSpawnInterval = 15000;
+
+    // ゲーム情報
+    let lives = 3;
+    let score = 0;
+    let isGameOver = false;
+    let specialReady = false;
+
+    const attackButton = document.getElementById('attackButton');
+
+    // ボタン操作管理
+    const keys = {
+        left: false,
+        right: false
+    };
+
+    // ボタン操作イベントリスナー
+    document.getElementById('left').addEventListener('mousedown', () => keys.left = true);
+    document.getElementById('left').addEventListener('mouseup', () => keys.left = false);
+    document.getElementById('left').addEventListener('touchstart', () => keys.left = true);
+    document.getElementById('left').addEventListener('touchend', () => keys.left = false);
+
+    document.getElementById('right').addEventListener('mousedown', () => keys.right = true);
+    document.getElementById('right').addEventListener('mouseup', () => keys.right = false);
+    document.getElementById('right').addEventListener('touchstart', () => keys.right = true);
+    document.getElementById('right').addEventListener('touchend', () => keys.right = false);
+
+    attackButton.addEventListener('click', () => {
+        if (specialReady) {
+            score += enemies.length;
+            enemies.length = 0;
+            specialReady = false;
+            attackButton.style.display = 'none';
+        }
+    });
+
+    // 敵生成関数
+    function createEnemy() {
+        const type = Math.random();
+        const enemy = {
+            x: Math.random() * (canvas.width - 30),
+            y: -30,
+            width: 30,
+            height: 30,
+            speed: 2 + Math.random() * 3,
+            originalX: Math.random() * (canvas.width - 30),
+            waveAmplitude: type > 0.7 ? 50 : 0, // 波の幅（70%の確率で波打ち）
+            waveFrequency: type > 0.7 ? 0.1 : 0 // 波の周波数
+        };
+        enemies.push(enemy);
+    }
+
+    // アイテム生成関数
+    function createItem() {
+        const itemType = Math.random() < 0.5 ? 'heart' : 'star';
+        const item = {
+            type: itemType,
+            x: Math.random() * (canvas.width - 20),
+            y: -20,
+            width: 20,
+            height: 20,
+            speed: 2
+        };
+        items.push(item);
+    }
+
+    // 当たり判定
+    function checkCollision(a, b) {
+        return (
+            a.x + a.hitbox.xOffset < b.x + b.width &&
+            a.x + a.hitbox.xOffset + a.hitbox.width > b.x &&
+            a.y + a.hitbox.yOffset < b.y + b.height &&
+            a.y + a.hitbox.yOffset + a.hitbox.height > b.y
+        );
+    }
+
+    // ゲーム更新
+    function update() {
+        if (isGameOver) return;
+
+        // プレイヤー移動
+        if (keys.left) chara1.x -= chara1.speed;
+        if (keys.right) chara1.x += chara1.speed;
+
+        // 画面外に出ないように制限
+        if (chara1.x < 0) chara1.x = 0;
+        if (chara1.x + chara1.width > canvas.width) chara1.x = canvas.width - chara1.width;
+
+        // 敵の移動と処理
+        for (let i = enemies.length - 1; i >= 0; i--) {
+            const enemy = enemies[i];
+            enemy.y += enemy.speed;
+            if (enemy.waveAmplitude) {
+                enemy.x = enemy.originalX + Math.sin(enemy.y * enemy.waveFrequency) * enemy.waveAmplitude;
+            }
+
+            if (enemy.y > canvas.height) {
+                enemies.splice(i, 1);
+                score++;
+                if (score >= 50) {
+                    isGameOver = true;
+                    alert("クリア！");
+                    return;
+                }
+                continue;
+            }
+
+            if (checkCollision(chara1, enemy)) {
+                lives--;
+                enemies.splice(i, 1);
+                if (lives <= 0) {
+                    isGameOver = true;
+                    alert('ゲームオーバー！');
+                    return;
+                }
+            }
+        }
+
+        // アイテムの移動と処理
+        for (let i = items.length - 1; i >= 0; i--) {
+            const item = items[i];
+            item.y += item.speed;
+
+            if (item.y > canvas.height) {
+                items.splice(i, 1);
+                continue;
+            }
+
+            if (checkCollision(chara1, item)) {
+                if (item.type === 'heart') {
+                    lives = Math.min(lives + 1, 5);
+                } else if (item.type === 'star') {
+                    specialReady = true;
+                    attackButton.style.display = 'block';
+                }
+                items.splice(i, 1);
+            }
+        }
+
+        draw();
+        if (!isGameOver) requestAnimationFrame(update);
+    }
+
+    // 描画
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // プレイヤー画像を描画
+        ctx.drawImage(playerImage, chara1.x, chara1.y, chara1.width, chara1.height);
+
+        // 敵
+        for (const enemy of enemies) {
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        }
+
+        // アイテム
+        for (const item of items) {
+            ctx.fillStyle = item.type === 'heart' ? 'pink' : 'gold';
+            ctx.fillRect(item.x, item.y, item.width, item.height);
+        }
+
+        // スコアと残機
+        ctx.fillStyle = 'black';
+        ctx.font = '20px Arial';
+        ctx.fillText(`スコア: ${score}`, 10, 30);
+        ctx.fillText(`残機: ${lives}`, 10, 60);
+    }
+
+    // ゲーム開始
+    function startGame() {
+        setInterval(() => {
+            if (!isGameOver) createEnemy();
+        }, enemySpawnInterval);
+
+        setInterval(() => {
+            if (!isGameOver) createItem();
+        }, itemSpawnInterval);
+
+        update();
+    }
+
+    startGame();
+</script>
+</body>
+</html>
