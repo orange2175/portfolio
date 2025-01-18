@@ -1,300 +1,253 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全体を上に調整</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-        #gameContainer {
-            flex: 6; /* ゲームエリアを少し広く */
-            background: lightblue;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        canvas {
-            background: lightblue;
-        }
-        #controls {
-            flex: 2; /* 操作エリアを少し広く */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #f0f0f0;
-            gap: 20px;
-        }
-        .button {
-            width: 80px;
-            height: 80px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-        }
-        #specialButton {
-            position: fixed;
-            bottom: 150px; /* ボタンの位置を少し上へ調整 */
-            right: 20px;
-            width: 80px;
-            height: 80px;
-            background: gold;
-            border-radius: 50%;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            line-height: 80px;
-            cursor: pointer;
-            display: none; /* デフォルトで非表示 */
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>キャラクター選択</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #character-selection {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .panel-row {
+      display: flex;
+      justify-content: space-around;
+      margin: 10px 0;
+    }
+
+    .panel {
+      width: 80px;
+      height: 80px;
+      background: gray;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      border: 2px solid white;
+      border-radius: 5px;
+      text-decoration: none;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    .panel img {
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+    }
+
+    .panel.locked {
+      background: darkgray;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      color: white;
+    }
+
+    #sound-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: gray;
+      color: white;
+      border: 2px solid white;
+      border-radius: 5px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    #description-popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .description-content {
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 300px;
+      width: 80%;
+    }
+
+    .description-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .description-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .play-button {
+      background-color: green;
+      color: white;
+    }
+
+    .cancel-button {
+      background-color: red;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-<div id="gameContainer">
-    <canvas id="gameCanvas"></canvas>
-</div>
-<div id="controls">
-    <div id="left" class="button">←</div>
-    <div id="jump" class="button">⤴</div>
-    <div id="right" class="button">→</div>
-</div>
-<div id="specialButton">攻撃</div>
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+  <!-- BGM -->
+  <audio id="bgm" loop>
+    <source src="064_BPM115.mp3" type="audio/mpeg">
+    お使いのブラウザはオーディオ要素に対応していません。
+  </audio>
 
-    // Canvasサイズ設定
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight * 0.75; // プレイ画面は75%使用
+  <!-- 音声オン/オフボタン -->
+  <div id="sound-toggle">音声オフ</div>
 
+  <div id="character-selection">
+    <!-- 1段目 -->
+    <div class="panel-row">
+      <div class="panel selectable" data-id="sui">
+        <img src="sui.png" alt="水守スイ">
+      </div>
+      <div class="panel locked">？</div>
+      <div class="panel locked">？</div>
+      <div class="panel locked">？</div>
+      <div class="panel locked">？</div>
+    </div>
+    <!-- 2段目 -->
+    <div class="panel-row">
+      <div class="panel selectable" data-id="akari">
+        <img src="akari.png" alt="白井アカリ">
+      </div>
+      <div class="panel locked">？</div>
+      <div class="panel locked">？</div>
+    </div>
+    <!-- 3段目 -->
+    <div class="panel-row">
+      <div class="panel selectable" data-id="erika">
+        <img src="erika.png" alt="姫宮エリカ">
+      </div>
+      <div class="panel locked">？</div>
+      <div class="panel locked">？</div>
+      <div class="panel locked">？</div>
+    </div>
+    <!-- 4段目 -->
+    <div class="panel-row">
+      <div class="panel locked">？</div>
+      <div class="panel locked">？</div>
+    </div>
+  </div>
+
+  <!-- ポップアップ -->
+  <div id="description-popup">
+    <div class="description-content">
+      <h2 id="character-name">キャラクター名</h2>
+      <p id="character-description">ここに説明文が表示されます。</p>
+      <div class="description-buttons">
+        <button class="play-button">プレイ</button>
+        <button class="cancel-button">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
     // キャラクター情報
-    const chara1 = {
-        x: canvas.width / 2 - 25,
-        y: canvas.height - 75,
-        width: 50,
-        height: 50,
-        speed: 5,
-        jumpPower: 15,
-        velocityY: 0,
-        isJumping: false,
-        gravity: 0.5
+    const characters = {
+      sui: {
+        name: "水守スイ",
+        description: "水を操る魔法少女で、仲間から頼られるリーダー。",
+      },
+      akari: {
+        name: "白井アカリ",
+        description: "タロットカードを使う魔法少女で、少し捻くれ者。",
+      },
+      erika: {
+        name: "姫宮エリカ",
+        description: "氷の魔法を操る優雅なお嬢様。",
+      },
     };
 
-    // 地面情報
-    const groundHeight = 20;
+    // ポップアップの要素
+    const popup = document.getElementById("description-popup");
+    const nameField = document.getElementById("character-name");
+    const descField = document.getElementById("character-description");
+    const playButton = document.querySelector(".play-button");
+    const cancelButton = document.querySelector(".cancel-button");
 
-    // ゲーム情報
-    let lives = 3;
-    let score = 0;
-    const maxScore = 30;
+    // パネルクリック時の処理
+    document.querySelectorAll(".panel.selectable").forEach(panel => {
+      panel.addEventListener("click", () => {
+        const id = panel.dataset.id;
+        const character = characters[id];
+        nameField.textContent = character.name;
+        descField.textContent = character.description;
+        popup.style.display = "flex";
 
-    // 敵キャラクターとアイテム
-    const enemies = [];
-    const items = [];
-    let itemStartDelay = 20000; // 20秒後にアイテム生成を開始
-    let lastItemSpawn = Date.now();
-
-    // 特殊攻撃ボタン
-    const specialButton = document.getElementById('specialButton');
-    let specialReady = false;
-
-    // ボタン操作管理
-    const keys = {
-        left: false,
-        right: false,
-        space: false
-    };
-
-    // イベントリスナー
-    document.getElementById('left').addEventListener('touchstart', () => keys.left = true);
-    document.getElementById('left').addEventListener('touchend', () => keys.left = false);
-    document.getElementById('right').addEventListener('touchstart', () => keys.right = true);
-    document.getElementById('right').addEventListener('touchend', () => keys.right = false);
-    document.getElementById('jump').addEventListener('touchstart', () => {
-        if (!chara1.isJumping) {
-            chara1.velocityY = -chara1.jumpPower;
-            chara1.isJumping = true;
-        }
+        // キャラクター選択時にエフェクトを追加
+        panel.style.opacity = "1"; // エフェクトを示す
+        panel.style.background = "blue"; // 背景色を変更
+        setTimeout(() => {
+          panel.style.opacity = "0.8"; // 元の透明度に戻す
+          panel.style.background = ""; // 背景色を元に戻す
+        }, 500); // 0.5秒後にエフェクトを戻す
+      });
     });
 
-    specialButton.addEventListener('click', () => {
-        enemies.length = 0; // 全ての敵を消滅
-        specialReady = false;
-        specialButton.style.display = 'none';
+    // プレイボタン
+    playButton.addEventListener("click", () => {
+      alert("プレイが開始されます！");
+      popup.style.display = "none";
     });
 
-    // 敵生成関数
-    function createEnemy(type) {
-        return {
-            type: type,
-            x: canvas.width + Math.random() * 300,
-            y: canvas.height - groundHeight - 40,
-            width: 30,
-            height: 30,
-            speed: 2 + Math.random() * 2
-        };
-    }
+    // キャンセルボタン
+    cancelButton.addEventListener("click", () => {
+      popup.style.display = "none";
+    });
 
-    // アイテム生成関数
-    function createItem(type) {
-        return {
-            type: type,
-            x: canvas.width + Math.random() * 300,
-            y: canvas.height - groundHeight - 80,
-            width: 20,
-            height: 20,
-            speed: 2
-        };
-    }
+    // BGMと音声切り替えボタン
+    const bgm = document.getElementById("bgm");
+    const soundToggle = document.getElementById("sound-toggle");
 
-    // 敵生成タイマー
-    setInterval(() => {
-        const enemyTypes = ['goomba', 'paratroopa', 'spiny'];
-        enemies.push(createEnemy(enemyTypes[Math.floor(Math.random() * enemyTypes.length)]));
-    }, 1500); // 敵の出現間隔を1.5秒
+    // 初期状態は音声オフ
+    let isMuted = true;
+    bgm.volume = 0.1; // 初期音量10%
+    bgm.muted = true;
 
-    // アイテム生成タイマー（20秒後に開始）
-    function spawnItemIfReady() {
-        if (Date.now() - lastItemSpawn >= itemStartDelay) {
-            if (Math.random() < 0.5) {
-                items.push(createItem('heart'));
-            } else {
-                items.push(createItem('star'));
-            }
-            lastItemSpawn = Date.now();
-        }
-    }
-
-    // 当たり判定
-    function checkCollision(a, b) {
-        return (
-            a.x < b.x + b.width &&
-            a.x + a.width > b.x &&
-            a.y < b.y + b.height &&
-            a.y + a.height > b.y
-        );
-    }
-
-    // ゲームループ
-    function update() {
-        // キャラクター移動
-        if (keys.left) chara1.x -= chara1.speed;
-        if (keys.right) chara1.x += chara1.speed;
-
-        // ジャンプと重力
-        chara1.velocityY += chara1.gravity;
-        chara1.y += chara1.velocityY;
-
-        // 地面判定
-        if (chara1.y + chara1.height > canvas.height - groundHeight) {
-            chara1.y = canvas.height - groundHeight - chara1.height;
-            chara1.isJumping = false;
-            chara1.velocityY = 0;
-        }
-
-        // 画面外に出ないよう制限
-        if (chara1.x < 0) chara1.x = 0;
-        if (chara1.x + chara1.width > canvas.width) chara1.x = canvas.width - chara1.width;
-
-        // 敵の更新
-        for (let i = enemies.length - 1; i >= 0; i--) {
-            const enemy = enemies[i];
-            enemy.x -= enemy.speed;
-
-            if (enemy.x + enemy.width < 0) {
-                enemies.splice(i, 1);
-                score++;
-                if (score >= maxScore) {
-                    alert('クリア！');
-                    return;
-                }
-                continue;
-            }
-
-            if (checkCollision(chara1, enemy)) {
-                lives--;
-                enemies.splice(i, 1);
-                if (lives <= 0) {
-                    alert('ゲームオーバー！');
-                    return;
-                }
-            }
-        }
-
-        // アイテム生成
-        spawnItemIfReady();
-
-        // アイテムの更新
-        for (let i = items.length - 1; i >= 0; i--) {
-            const item = items[i];
-            item.x -= item.speed;
-
-            if (item.x + item.width < 0) {
-                items.splice(i, 1);
-                continue;
-            }
-
-            if (checkCollision(chara1, item)) {
-                if (item.type === 'heart' && lives < 5) {
-                    lives++;
-                }
-                if (item.type === 'star') {
-                    specialReady = true;
-                    specialButton.style.display = 'block';
-                }
-                items.splice(i, 1);
-            }
-        }
-
-        draw();
-        requestAnimationFrame(update);
-    }
-
-    // 描画
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // 地面
-        ctx.fillStyle = 'green';
-        ctx.fillRect(0, canvas.height - groundHeight, canvas.width, groundHeight);
-
-        // キャラクター
-        ctx.fillStyle = 'red';
-        ctx.fillRect(chara1.x, chara1.y, chara1.width, chara1.height);
-
-        // 敵
-        for (const enemy of enemies) {
-            ctx.fillStyle = enemy.type === 'goomba' ? 'brown' : enemy.type === 'paratroopa' ? 'blue' : 'purple';
-            ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
-        }
-
-        // アイテム
-        for (const item of items) {
-            ctx.fillStyle = item.type === 'heart' ? 'pink' : 'gold';
-            ctx.fillRect(item.x, item.y, item.width, item.height);
-        }
-
-        // スコアと残機
-        ctx.fillStyle = 'black';
-        ctx.font = '20px Arial';
-        ctx.fillText(`スコア: ${score}`, 10, 30);
-        ctx.fillText(`残機: ${lives}`, 10, 60);
-    }
-
-    update();
-</script>
+    // 音声切り替えボタンの動作
+    soundToggle.addEventListener("click", () => {
+      isMuted = !isMuted;
+      bgm.muted = isMuted;
+      soundToggle.textContent = isMuted ? "音声オフ" : "音声オン";
+      if (!isMuted) {
+        bgm.play(); // 必ず音声を再生
+      }
+    });
+  </script>
 </body>
 </html>
