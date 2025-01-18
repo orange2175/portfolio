@@ -177,19 +177,22 @@
   </div>
 
   <script>
-    // キャラクター情報
+    // キャラクター情報とリンク先
     const characters = {
       sui: {
         name: "水守スイ",
         description: "水を操る魔法少女で、仲間から頼られるリーダー。",
+        link: "", // リンク未設定
       },
       akari: {
         name: "白井アカリ",
         description: "タロットカードを使う魔法少女で、少し捻くれ者。",
+        link: "akari/akari1", // アカリのリンク
       },
       erika: {
         name: "姫宮エリカ",
         description: "氷の魔法を操る優雅なお嬢様。",
+        link: "", // リンク未設定
       },
     };
 
@@ -200,6 +203,8 @@
     const playButton = document.querySelector(".play-button");
     const cancelButton = document.querySelector(".cancel-button");
 
+    let selectedLink = "";
+
     // パネルクリック時の処理
     document.querySelectorAll(".panel.selectable").forEach(panel => {
       panel.addEventListener("click", () => {
@@ -207,22 +212,16 @@
         const character = characters[id];
         nameField.textContent = character.name;
         descField.textContent = character.description;
+        selectedLink = character.link; // ゲームリンクをセット
         popup.style.display = "flex";
-
-        // キャラクター選択時にエフェクトを追加
-        panel.style.opacity = "1"; // エフェクトを示す
-        panel.style.background = "blue"; // 背景色を変更
-        setTimeout(() => {
-          panel.style.opacity = "0.8"; // 元の透明度に戻す
-          panel.style.background = ""; // 背景色を元に戻す
-        }, 500); // 0.5秒後にエフェクトを戻す
       });
     });
 
     // プレイボタン
     playButton.addEventListener("click", () => {
-      alert("プレイが開始されます！");
-      popup.style.display = "none";
+      if (selectedLink) {
+        window.location.href = selectedLink; // ゲームリンクへ遷移
+      }
     });
 
     // キャンセルボタン
@@ -230,22 +229,19 @@
       popup.style.display = "none";
     });
 
-    // BGMと音声切り替えボタン
+    // 音声切り替えボタンの動作
     const bgm = document.getElementById("bgm");
     const soundToggle = document.getElementById("sound-toggle");
-
-    // 初期状態は音声オフ
     let isMuted = true;
-    bgm.volume = 0.1; // 初期音量10%
+    bgm.volume = 0.1;
     bgm.muted = true;
 
-    // 音声切り替えボタンの動作
     soundToggle.addEventListener("click", () => {
       isMuted = !isMuted;
       bgm.muted = isMuted;
       soundToggle.textContent = isMuted ? "音声オフ" : "音声オン";
       if (!isMuted) {
-        bgm.play(); // 必ず音声を再生
+        bgm.play();
       }
     });
   </script>
