@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スマホ対応ゲーム</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        canvas {
+            background: #f0f0f0;
+            border: 1px solid #000;
+        }
+
+        #controls {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            gap: 5px;
+        }
+
+        button {
+            width: 60px;
+            height: 60px;
+            font-size: 20px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 10px;
+        }
+
+        #score, #health {
+            position: absolute;
+            top: 10px;
+            font-size: 20px;
+            font-family: Arial, sans-serif;
+            color: #000;
+        }
+
+        #score {
+            left: 10px;
+        }
+
+        #health {
+            right: 10px;
+        }
+
+        #game-over, #game-clear {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 24px;
+            text-align: center;
+            display: none;
+        }
+
+        #game-over img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="score">Score: 0</div>
+    <div id="health">Health: 100</div>
+    <div id="controls">
+        <button id="heal">♥</button>
+        <button id="up">↑</button>
+        <button id="attack">🔥</button>
+        <button id="left">←</button>
+        <button></button>
+        <button id="right">→</button>
+        <button></button>
+        <button id="down">↓</button>
+        <button></button>
+    </div>
+    <div id="game-over">
+        ゲームオーバー<br>リロードして再挑戦
+        <img src="gameover.jpg" alt="Game Over">
+    </div>
+    <div id="game-clear">クリア！おめでとう！</div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth * 0.9;
+        canvas.height = window.innerHeight * 0.6;
+
+        let player = { x: canvas.width / 2, y: canvas.height / 2, size: 160, health: 100, isAttacking: false, invincible: false };
+        let enemies = [];
+        let score = 0;
+        const maxScore = 50;
+        const damage = 10;
+        const attackDrain = 0.2;
+        const knockback = 30;
+
+        const playerImg = new Image();
+        const playerAttackImg = new Image();
+        playerImg.src = "kako.png";
+        playerAttackImg.src = "kakofire.png";
+
+        const keys = {};
+
+        function movePlayer() {
+            let newX = player.x;
+            let newY = player.y;
+
+            if (keys['ArrowUp']) newY -= 5;
+            if (keys['ArrowDown']) newY += 5;
+            if (keys['ArrowLeft']) newX -= 5;
+            if (keys['ArrowRight']) newX += 5;
+
+            const leftEdge = newX - player.size / 2 / 2;
+            const rightEdge = newX + player.size / 2 / 2;
+            const topEdge = newY - player.size / 2 / 2;
+            const bottomEdge = newY + player.size / 2 / 2;
+
+            if (
+                leftEdge >= 0 &&
+                rightEdge <= canvas.width &&
+                topEdge >= 0 &&
+                bottomEdge <= canvas.height
+            ) {
+                player.x = newX;
+                player.y = newY;
+            }
+        }
+
+        function drawPlayer() {
+            const img = player.isAttacking ? playerAttackImg : playerImg;
+            ctx.drawImage(img, player.x - player.size / 2, player.y - player.size / 2, player.size, player.size);
+        }
+
+        function spawnEnemy() {
+            const size = Math.random() * 20 + 10;
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const speed = Math.random() * 2 + 1;
+            const dx = Math.random() > 0.5 ? 1 : -1;
+            const dy = Math.random() > 0.5 ? 1 : -1;
+            enemies.push({ x, y, size, speed, dx, dy });
+        }
+
+        function moveEnemies() {
+            enemies.forEach((enemy) => {
+                enemy.x += enemy.dx * enemy.speed;
+                enemy.y += enemy.dy * enemy.speed;
+
+                if (enemy.x <= 0 || enemy.x >= canvas.width) enemy.dx *= -1;
+                if (enemy.y <= 0 || enemy.y >= canvas.height) enemy.dy *= -1;
+            });
+        }
+
+        function drawEnemies() {
+            enemies.forEach((enemy) => {
+                ctx.fillStyle = 'red';
+                ctx.beginPath();
+                ctx.arc(enemy.x, enemy.y, enemy.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function checkCollisions() {
+            enemies.forEach((enemy, index) => {
+                const dx = player.x - enemy.x;
+                const dy = player.y - enemy.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                const playerCollisionRadius = player.size / 6; // 当たり判定を1/3サイズに調整
+                if (distance < playerCollisionRadius + enemy.size) {
+                    if (player.isAttacking) {
+                        enemies.splice(index, 1);
+                        score++;
+                        document.getElementById('score').innerText = `Score: ${score}`;
+                        if (score >= maxScore) {
+                            document.getElementById('game-clear').style.display = 'block';
+                            cancelAnimationFrame(animationId);
+                        }
+                    } else if (!player.invincible) {
+                        player.health -= damage;
+                        document.getElementById('health').innerText = `Health: ${Math.floor(player.health)}`;
+                        player.invincible = true;
+                        const angle = Math.atan2(dy, dx);
+                        player.x -= Math.cos(angle) * knockback;
+                        player.y -= Math.sin(angle) * knockback;
+
+                        setTimeout(() => {
+                            player.invincible = false;
+                        }, 1000);
+
+                        if (player.health <= 0) {
+                            document.getElementById('game-over').style.display = 'block';
+                            cancelAnimationFrame(animationId);
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateGame() {
+            movePlayer();
+            moveEnemies();
+            checkCollisions();
+
+            if (player.isAttacking) {
+                player.health -= attackDrain;
+                document.getElementById('health').innerText = `Health: ${Math.floor(player.health)}`;
+            }
+
+            if (player.health < 0) {
+                document.getElementById('game-over').style.display = 'block';
+                cancelAnimationFrame(animationId);
+            }
+        }
+
+        let animationId;
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawEnemies();
+            updateGame();
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        const buttonEvents = [
+            { id: 'up', key: 'ArrowUp' },
+            { id: 'down', key: 'ArrowDown' },
+            { id: 'left', key: 'ArrowLeft' },
+            { id: 'right', key: 'ArrowRight' },
+        ];
+        buttonEvents.forEach(({ id, key }) => {
+            document.getElementById(id).addEventListener('mousedown', () => (keys[key] = true));
+            document.getElementById(id).addEventListener('mouseup', () => (keys[key] = false));
+            document.getElementById(id).addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keys[key] = true;
+            });
+            document.getElementById(id).addEventListener('touchend', () => (keys[key] = false));
+        });
+
+        document.getElementById('attack').addEventListener('click', () => {
+            player.isAttacking = !player.isAttacking;
+        });
+
+        document.getElementById('heal').addEventListener('mousedown', () => {
+            if (player.health < 100) {
+                player.health++;
+                document.getElementById('health').innerText = `Health: ${Math.floor(player.health)}`;
+            }
+        });
+
+        setInterval(spawnEnemy, 3000);
+
+        playerImg.onload = () => gameLoop();
+    </script>
+</body>
+</html>
